@@ -16,7 +16,7 @@ $(document).ready(function(){
             }
         };
         
-        $.ajax(settings).then(function (result) {
+        $.ajax(settings).then(function (response) {
             console.log(response);
         });
     }

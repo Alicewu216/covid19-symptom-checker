@@ -8,11 +8,12 @@
   <title>COVID-19 Symptom Checker</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
   <!--Hero(jumbotron) section with the Page Title-->
-  <section class="hero is-medium is-primary is-bold">
+  <section class="hero is-medium has-bg-img">
     <div class="hero-body">
       <div class="container">
         <h1 class="title">
@@ -27,36 +28,88 @@
 
 
   <!--add symptom button wiht drop down menu-->
-  <div class="container is-max-desktop">
-    <div class="columns">
+  <div class="container is-max-desktop ">
+    <div class="columns mt-5">
       <div class="column is-4">
-        <!--Add Symptom button with drop down-->
-        <div class="dropdown is-active">
-          <!--Add Sympton button>-->
-          <div class="dropdown-trigger">
-            <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
-              <span>Add Symptom</span>
-              <span class="icon is-small">
-                <i class="fas fa-angle-down" aria-hidden="true"></i>
-              </span>
-            </button>
-          </div>
-          <!--dropdown menu-->
-          <div class="dropdown-menu" id="dropdown-menu" role="menu">
-            <div class="dropdown-content">
-              <a href="#" class="dropdown-item">
-                Symptom 1
-              </a>
-              <a class="dropdown-item">
-                Symptom 2
-              </a>
-              <a href="#" class="dropdown-item is-active">
-                Symptom 3
-              </a>
-              <a href="#" class="dropdown-item">
-                Symptom 4
-              </a>
+        <div class="field">
+          <div class="field is-horizontal">
+            <div class="field-label is-normal">
+              <label class="label">Age:</label>
             </div>
+            <div class="field-body">
+              <div class="field">
+                <p class="control">
+                  <input class="input" type="age" placeholder="Enter your age here">
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="field is-grouped is-grouped-multiline">
+            <p class="control">
+              <a class="button">
+                One
+              </a>
+            </p>
+            <p class="control">
+              <a class="button">
+                Two
+              </a>
+            </p>
+            <p class="control">
+              <a class="button">
+                Three
+              </a>
+            </p>
+            <p class="control">
+              <a class="button">
+                Four
+              </a>
+            </p>
+            <p class="control">
+              <a class="button">
+                Five
+              </a>
+            </p>
+            <p class="control">
+              <a class="button">
+                Six
+              </a>
+            </p>
+            <p class="control">
+              <a class="button">
+                Seven
+              </a>
+            </p>
+            <p class="control">
+              <a class="button">
+                Eight
+              </a>
+            </p>
+            <p class="control">
+              <a class="button">
+                Nine
+              </a>
+            </p>
+            <p class="control">
+              <a class="button">
+                Ten
+              </a>
+            </p>
+            <p class="control">
+              <a class="button">
+                Eleven
+              </a>
+            </p>
+            <p class="control">
+              <a class="button">
+                Twelve
+              </a>
+            </p>
+            <p class="control">
+              <a class="button">
+                Thirteen
+              </a>
+            </p>
           </div>
           <!--Analyze button-->
           <div class="buttons">
@@ -64,15 +117,17 @@
           </div>
         </div>
       </div>
-
       <div class="column is-8">
-      <div>
-        <p>analysis results here</p>
-      </div>
+        <div>
+          <p>analysis results here</p>
+        </div>
       </div>
     </div>
 
-    <script src="test.js"></script>
+
+  </div>
+
+  <script src="script.js"></script>
 </body>
 
 </html>
