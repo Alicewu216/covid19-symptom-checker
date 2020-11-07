@@ -1,23 +1,78 @@
 <!DOCTYPE html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width">
+<html>
 
-        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>COVID-19 Symptom Checker</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
 
-        <!-- <link rel="stylesheet" href="css/normalize.css">
-        <link rel="stylesheet" href="css/main.css"> -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    </head>
-    <body>
+<body>
+  <!--Hero(jumbotron) section with the Page Title-->
+  <section class="hero is-medium is-primary is-bold">
+    <div class="hero-body">
+      <div class="container">
+        <h1 class="title">
+          COVID-19 Symptom Checker
+        </h1>
+        <h2 class="subtitle">
+          Add your symptoms and see analysis of your chance for getting COVID-19.
+        </h2>
+      </div>
+    </div>
+  </section>
 
-        <!-- Add your site or application content here -->
-        <p>HTML5 Starter Template</p>
 
-	<script src="test.js"></script>
+  <!--add symptom button wiht drop down menu-->
+  <div class="container is-max-desktop">
+    <div class="columns">
+      <div class="column is-4">
+        <!--Add Symptom button with drop down-->
+        <div class="dropdown is-active">
+          <!--Add Sympton button>-->
+          <div class="dropdown-trigger">
+            <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+              <span>Add Symptom</span>
+              <span class="icon is-small">
+                <i class="fas fa-angle-down" aria-hidden="true"></i>
+              </span>
+            </button>
+          </div>
+          <!--dropdown menu-->
+          <div class="dropdown-menu" id="dropdown-menu" role="menu">
+            <div class="dropdown-content">
+              <a href="#" class="dropdown-item">
+                Symptom 1
+              </a>
+              <a class="dropdown-item">
+                Symptom 2
+              </a>
+              <a href="#" class="dropdown-item is-active">
+                Symptom 3
+              </a>
+              <a href="#" class="dropdown-item">
+                Symptom 4
+              </a>
+            </div>
+          </div>
+          <!--Analyze button-->
+          <div class="buttons">
+            <button class="button is-info">Analyze</button>
+          </div>
+        </div>
+      </div>
 
-    </body>
+      <div class="column is-8">
+      <div>
+        <p>analysis results here</p>
+      </div>
+      </div>
+    </div>
+
+    <script src="test.js"></script>
+</body>
+
 </html>
