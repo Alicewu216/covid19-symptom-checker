@@ -1,29 +1,110 @@
 $(document).ready(function(){
 
-    baseURL ="https://endlessmedicalapi1.p.rapidapi.com/";
+    queryURL ="http://api.endlessmedical.com/v1/dx/";
 
-    var initSessionID = baseURL + "InitSession";
+    var symptom = [
+        { name: "Chills", 
+          value: "Yes"
+        }
+        
+    ];
     
+
     topDiseasesResult = [];
     variableImportancesResult = [];
 
     function getFeatures() {
-        const settings = {
-            "async": true,
-            "crossDomain": true,
-            "url": baseURL + "GetFeatures",
-            "method": "GET",
-            "headers": {
-                "x-rapidapi-key": "b5e515e4efmshf7f7cf9142dd41ep17f3ebjsn9d08a632e406",
-                "x-rapidapi-host": "endlessmedicalapi1.p.rapidapi.com"
-            }
-        };
-        
-        $.ajax(settings).then(function (response) {
+        $.ajax({
+            url: queryURL + "GetFeatures",
+            method: "GET"
+        })
+
+        .then(function(response){
+            console.log(response);
+        });
+    };
+
+    function getOutcomes () {
+        $.ajax({
+            url: queryURL + "GetOutcomes",
+            method: "GET"
+        })
+
+        .then(function(response){
             console.log(response);
         });
     }
 
+   
+
+    var sessionID = null; // SessionID
+
+    function InitializeSessionIfNecessary()
+    {
+        if (null != sessionID)
+            return;
+
+            $.ajax({
+                url: queryURL + "InitSession",
+                method: "GET"
+            })
+            .then(function(response){
+                if (response.status == 'ok'){
+                console.log(response);
+                var sessionID = response.SessionID;
+                console.log(sessionID);
+        
+                termsOfAgreement(sessionID);
+                getOutcomes();
+                getFeatures();
+                }
+            });
+        
+    };
+
+    InitializeSessionIfNecessary();
+
+    function termsOfAgreement(sessionID) {
+
+        var strPassphrase = "I have read, understood and I accept and agree to comply with the Terms of Use of EndlessMedicalAPI and Endless Medical services. The Terms of Use are available on endlessmedical.com";
+
+        
+        $.ajax({
+            url: queryURL + "AcceptTermsOfUse?" + "SessionID=" + sessionID + "&passphrase=" + strPassphrase, 
+            method: "POST"
+        })
+        .then(function(response){
+            console.log(response);
+        })
+    };
+
+
+    function updateFeature(){
+
+        $.ajax({
+        url: queryURL + "UpdateFeature?" + "SessionID=" + sessionID + "&name=" + symptom.name + "&value=" + symptom.value,
+        method: "POST"
+        })
+        .then(function (response) {
+        console.log(response);
+        /*
+        if (result.data.status == 'ok') {
+            setTimeout( DisplaySuggestedTests(), 1000 ); // 10.08.2019
+        }
+        else if (result.data.status == 'error') {
+
+        }
+        */
+        });
+    }
+
+    $(".button").on("click", function(){
+
+        updateFeature();
+
+        });
+    
+    /*
     function getOutcomes () {
         const settings = {
             "async": true,
@@ -133,8 +214,8 @@ $(document).ready(function(){
         $.ajax(settings).done(function (response) {
             console.log(response);
             if (result.data.status == 'ok') {
-                self.TopDiseasesResult = result.data.Diseases;
-                self.VariableImportancesResult = result.data.VariableImportances;
+                topDiseasesResult = result.data.Diseases;
+                variableImportancesResult = result.data.VariableImportances;
             }
             else if (result.data.status == 'error') {
 
@@ -163,9 +244,7 @@ $(document).ready(function(){
 
 
 
-    });
+ });
 
 
 
-
-    /* Age, Chills, HistoryFever, */
