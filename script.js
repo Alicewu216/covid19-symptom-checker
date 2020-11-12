@@ -20,9 +20,12 @@ $(document).ready(function(){
         })
 
         .then(function(response){
+            console.log("This is a console log for getFeatures: ")
             console.log(response);
         });
     };
+
+    getFeatures();
 
     function getOutcomes () {
         $.ajax({
@@ -31,13 +34,17 @@ $(document).ready(function(){
         })
 
         .then(function(response){
+            console.log("This is a console log for getOutcomes: ")
             console.log(response);
         });
     }
 
+    getOutcomes();
+   
    
 
     var sessionID = null; // SessionID
+    //var useDefaultValues = null;
 
     function InitializeSessionIfNecessary()
     {
@@ -50,14 +57,28 @@ $(document).ready(function(){
             })
             .then(function(response){
                 if (response.status == 'ok'){
+
+                // Response for InitSession is console logged here.
                 console.log(response);
-                var sessionID = response.SessionID;
-                console.log(sessionID);
-        
-                termsOfAgreement(sessionID);
-                getOutcomes();
-                getFeatures();
+                //Session ID is stored here.
+                sessionID = response.SessionID;
+                //Session ID is console logged here.
+                console.log("This is the session ID: " + sessionID);
+                
+
                 }
+                termsOfAgreement(sessionID);
+                getUseDefaultValues ();
+                setUseDefaultValues();
+                updateFeature();
+                //deleteFeature();
+                getSuggestedTests();
+                getSuggestedSpecializations();
+                getSuggestedFeatures_PatientProvided();
+                getSuggestedFeatures_PhysicianProvided();
+                getSuggestedFeatures_Tests();
+                analyze();
+                loadSymptoms();
             });
         
     };
@@ -74,174 +95,160 @@ $(document).ready(function(){
             method: "POST"
         })
         .then(function(response){
+            console.log("This is a console log for termsOfAgreement: ")
             console.log(response);
         })
     };
 
+    function getUseDefaultValues () {
+        //AJAX call for the default values
+        $.ajax({
+             url: queryURL + "GetUseDefaultValues?SessionID=" + sessionID,
+             method: "GET"
+        })
+        .then(function(response){
+            if (response.status == 'ok')
+                console.log("AJAX resonse for getUseDefaultValues: " );
+                console.log(response);             
+        })
+
+        
+    }
+
+    function setUseDefaultValues (){
+
+        $.ajax({
+            url: queryURL + "SetUseDefaultValues?SessionID=" + sessionID + "&value=true",
+            method: "POST"
+        })
+        .then(function(response){
+            console.log("This is a console log for setUseDefaultValues: ");
+            console.log(response);
+        })
+    }
 
     function updateFeature(){
 
         $.ajax({
-        url: queryURL + "UpdateFeature?" + "SessionID=" + sessionID + "&name=" + symptom.name + "&value=" + symptom.value,
-        method: "POST"
+            url: queryURL + "UpdateFeature?" + "SessionID=" + sessionID + "&name=" + symptom[0].name + "&value=" + symptom[0].value,
+            method: "POST"
         })
         .then(function (response) {
-        console.log(response);
-        /*
-        if (result.data.status == 'ok') {
+            console.log("This is a console log for updateFeature: ");
+            console.log(response);
+            /*
+            if (result.data.status == 'ok') {
             setTimeout( DisplaySuggestedTests(), 1000 ); // 10.08.2019
-        }
-        else if (result.data.status == 'error') {
-
-        }
-        */
-        });
-    }
-
-    $(".button").on("click", function(){
-
-        updateFeature();
-
-        });
-    
-    /*
-    function getOutcomes () {
-        const settings = {
-            "async": true,
-            "crossDomain": true,
-            "url": baseURL + "GetOutcomes",
-            "method": "GET",
-            "headers": {
-                "x-rapidapi-key": "b5e515e4efmshf7f7cf9142dd41ep17f3ebjsn9d08a632e406",
-                "x-rapidapi-host": "endlessmedicalapi1.p.rapidapi.com"
-            }
-        };
-        
-        $.ajax(settings).done(function (response) {
-            console.log(response);
-        });
-    }
-
-    var sessionID = null; // SessionID
-
-    function InitializeSessionIfNecessary()
-    {
-        if (null != sessionID)
-            return;
-
-
-            $.ajax({
-                async: true,
-                crossDomain: true,
-                url: initSessionID,
-                method: "GET",
-                headers: {
-                    "x-rapidapi-key": "b5e515e4efmshf7f7cf9142dd41ep17f3ebjsn9d08a632e406",
-                    "x-rapidapi-host": "endlessmedicalapi1.p.rapidapi.com"
-                }
-            }).then(function(response){
-                if (response.status == 'ok'){
-                //console.log(response);
-                var sessionID = response.SessionID;
-                console.log(sessionID);
-        
-                //termsOfAgreement(sessionID);
-                analyze(sessionID);
-                getOutcomes();
-                getFeatures();
-                }
-            });
-        
-    }
-    
-    InitializeSessionIfNecessary();
-
-    
-    function updateFeature(symptom){
-        const settings = {
-            "async": true,
-            "crossDomain": true,
-            "url": "https://endlessmedicalapi1.p.rapidapi.com/UpdateFeature?SessionID=" + sessionID + "&name=" + symptom.name + "&value=" + symptom.value,
-            "method": "POST",
-            "headers": {
-                "x-rapidapi-key": "b5e515e4efmshf7f7cf9142dd41ep17f3ebjsn9d08a632e406",
-                "x-rapidapi-host": "endlessmedicalapi1.p.rapidapi.com"
-            }
-        };
-        
-        $.ajax(settings).done(function (response) {
-            console.log(response);
-            if (result.data.status == 'ok') {
-                setTimeout( DisplaySuggestedTests(), 1000 ); // 10.08.2019
             }
             else if (result.data.status == 'error') {
 
             }
+            */
         });
     }
 
-    function DeleteSymptom(symptom)
-    {
-        const settings = {
-            "async": true,
-            "crossDomain": true,
-            "url": "https://endlessmedicalapi1.p.rapidapi.com/DeleteFeature",
-            "method": "POST",
-            "headers": {
-                "x-rapidapi-key": "b5e515e4efmshf7f7cf9142dd41ep17f3ebjsn9d08a632e406",
-                "x-rapidapi-host": "endlessmedicalapi1.p.rapidapi.com"
-            }
-        };
-        
-        $.ajax(settings).done(function (response) {
-            console.log(response);
-        });
-    }
+    function deleteFeature (){
 
-    function analyze(symptom) {
-        var analyze = baseURL + "/Analyze?SessionID=" + sessionID;
-        const settings = {
-            "async": true,
-            "crossDomain": true,
-            "url": analyze,
-            "method": "GET",
-            "headers": {
-                "x-rapidapi-key": "b5e515e4efmshf7f7cf9142dd41ep17f3ebjsn9d08a632e406",
-                "x-rapidapi-host": "endlessmedicalapi1.p.rapidapi.com"
-            }
-        };
-        
-        $.ajax(settings).done(function (response) {
-            console.log(response);
-            if (result.data.status == 'ok') {
-                topDiseasesResult = result.data.Diseases;
-                variableImportancesResult = result.data.VariableImportances;
-            }
-            else if (result.data.status == 'error') {
-
-            }
-
-            document.getElementById('ifDetails').contentDocument.body.innerHTML = JSON.stringify( result.data );
-        });
-    }
-    
-
-    /*
-    function termsOfAgreement(sessionID) {
-        var acceptTerms = baseURL + "AcceptTermsOfUse?SessionID=" + sessionID + "&passphrase=I%20have%20read%2C%20understood%20and%20I%20accept%20and%20agree%20to%20comply%20with%20the%20Terms%20of%20Use%20of%20EndlessMedicalAPI%20and%20Endless%20Medical%20services.%20The%20Terms%20of%20Use%20are%20available%20on%20endlessmedical.com"
-        console.log(acceptTerms);
         $.ajax({
-            async: true,
-            crossDomain: true,
-            url: acceptTerms,
-            method: "POST",
-            success: function(data){
-                alert(data);
+            url: queryURL + "DeleteFeature?" + "SessionID=" + sessionID + "&name=" + symptom[0].name,
+            method: "POST"
+        })
+        .then(function(response) {
+            if (response.status == 'ok'){
+            console.log("This is a console log for deleteFeature: ");
+            console.log(response);
+            }
+            else if (response.status){
+                console.log("deleteFeature Error")
             }
         })
-    };
-    */
 
+    }
+    
+
+    function getSuggestedTests () {
+
+        $.ajax({
+            url: queryURL + "GetSuggestedTests?SessionID=" + sessionID + "&TopDiseasesToTake=10",
+            method: "GET"
+        })
+        .then(function(response){
+            console.log("This is a console log for getSuggestedTests: ");
+            console.log(response);
+        })
+    }
+
+    function getSuggestedSpecializations () {
+
+        $.ajax({
+            url: queryURL + "GetSuggestedSpecializations?SessionID=" + sessionID + "&NumberOfResults=10",
+            method: "GET"
+        })
+        .then(function(response){
+            console.log("This is a console log for getSuggestedSpecializations: ");
+            console.log(response);
+        })
+    }
+
+    function getSuggestedFeatures_PatientProvided () {
+
+        $.ajax({
+            url: queryURL + "GetSuggestedFeatures_PatientProvided?SessionID=" + sessionID + "&TopDiseasesToTake=10",
+            method: "GET"
+        })
+        .then(function(response){
+            console.log("This is a console log for getSuggestedFeatures_PatientProvided: ");
+            console.log(response);
+        })
+    }
+
+    function getSuggestedFeatures_PhysicianProvided () {
+
+        $.ajax({
+            url: queryURL + "GetSuggestedFeatures_PhysicianProvided?SessionID=" + sessionID + "&TopDiseasesToTake=10",
+            method: "GET"
+        })
+        .then(function(response){
+            console.log("This is a console log for getSuggestedFeatures_PhysicianProvided: ");
+            console.log(response);
+        })
+    }
+
+    function getSuggestedFeatures_Tests () {
+
+        $.ajax({
+            url: queryURL + "GetSuggestedFeatures_Tests?SessionID=" + sessionID + "&TopDiseasesToTake=10",
+            method:"GET"
+        })
+        .then(function(response){
+            console.log("This is a console log for getSuggestedFeatures_Tests: ");
+            console.log(response);
+        })
+    }
+
+    function analyze () {
+
+        $.ajax({
+            url: queryURL + "Analyze?SessionID=" + sessionID + "NumberOfResults=10",
+            method: "GET"
+        })
+        .then(function(response){
+            console.log("This is a console log for the analyze function: ");
+            console.log(response);
+
+            if (response.status == 'ok') {
+                topDiseasesResult = response.Diseases;
+                variableImportancesResult = response.VariableImportances;
+            }
+        })
+    }
+    
+    function loadSymptoms() {
+
+        $.getJSON( "../Assests/SymptomsOutput.json", function( json ) {
+            console.log( json );
+           });
+    }
 
 
  });
