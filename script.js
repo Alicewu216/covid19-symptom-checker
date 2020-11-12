@@ -1,12 +1,13 @@
 $(document).ready(function () {
   var queryURL = "http://api.endlessmedical.com/v1/dx/";
 
-  var symptom = [{ name: "Chills", value: "Yes" }];
+  var symptom = [];
 
   var topDiseasesResult = [];
   var variableImportancesResult = [];
 
   $(".input")
+  
 
   $(".field.is-grouped.is-grouped-multiline").on("click", ".button", function (
     event
@@ -28,6 +29,12 @@ $(document).ready(function () {
       console.log(symptom);
     }
   });
+
+    $(".button.submit-btn.is-info").on("click", function() {
+        console.log("analyze clicked");
+        updateFeature();
+        analyze();
+    });
 
   function getFeatures() {
     $.ajax({
@@ -86,15 +93,15 @@ function InitializeSessionIfNecessary()
             termsOfAgreement(sessionID);
             getUseDefaultValues ();
             setUseDefaultValues();
-            updateFeature();
-            //deleteFeature();
+            
+            deleteFeature();
             getSuggestedTests();
             getSuggestedSpecializations();
             getSuggestedFeatures_PatientProvided();
             getSuggestedFeatures_PhysicianProvided();
             getSuggestedFeatures_Tests();
-            analyze();
-            loadSymptoms();
+            
+            //loadSymptoms();
         });
     
 };
@@ -144,23 +151,24 @@ function setUseDefaultValues (){
 }
 
 function updateFeature(){
+    for (var k = 0; k < symptom.length; k++) {
+        $.ajax({
+            url: queryURL + "UpdateFeature?" + "SessionID=" + sessionID + "&name=" + symptom[k].name + "&value=" + symptom[k].value,
+            method: "POST"
+        })
+        .then(function (response) {
+            console.log("This is a console log for updateFeature: ");
+            console.log(response);
+            /*
+            if (result.data.status == 'ok') {
+            setTimeout( DisplaySuggestedTests(), 1000 ); // 10.08.2019
+            }
+            else if (result.data.status == 'error') {
 
-    $.ajax({
-        url: queryURL + "UpdateFeature?" + "SessionID=" + sessionID + "&name=" + symptom[0].name + "&value=" + symptom[0].value,
-        method: "POST"
-    })
-    .then(function (response) {
-        console.log("This is a console log for updateFeature: ");
-        console.log(response);
-        /*
-        if (result.data.status == 'ok') {
-        setTimeout( DisplaySuggestedTests(), 1000 ); // 10.08.2019
-        }
-        else if (result.data.status == 'error') {
-
-        }
-        */
-    });
+            }
+            */
+        });
+    }
 }
 
 function deleteFeature (){
