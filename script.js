@@ -1,88 +1,98 @@
-$(document).ready(function(){
+$(document).ready(function () {
+  var queryURL = "http://api.endlessmedical.com/v1/dx/";
 
-    queryURL ="http://api.endlessmedical.com/v1/dx/";
+  var symptom = [{ name: "Chills", value: "Yes" }];
 
-    var symptom = [
-        { name: "Chills", 
-          value: "Yes"
+  var topDiseasesResult = [];
+  var variableImportancesResult = [];
+
+  $(".input")
+
+  $(".field.is-grouped.is-grouped-multiline").on("click", ".button", function (
+    event
+  ) {
+    var nameUser = $(event.target).prop("name");
+    var valueUser = $(event.target).attr("namedata");
+    if ($(event.target).hasClass("is-danger")) {
+      $(event.target).removeClass("is-danger");
+      for (var j = 0; j < symptom.length; j++) {
+        if (symptom[j].name == nameUser) {
+          symptom.splice(j, 1);
+          console.log(symptom);
         }
-        
-    ];
-    
+      }
+    } else {
+      $(event.target).addClass("is-danger");
 
-    topDiseasesResult = [];
-    variableImportancesResult = [];
-
-    function getFeatures() {
-        $.ajax({
-            url: queryURL + "GetFeatures",
-            method: "GET"
-        })
-
-        .then(function(response){
-            console.log(response);
-        });
-    };
-
-    function getOutcomes () {
-        $.ajax({
-            url: queryURL + "GetOutcomes",
-            method: "GET"
-        })
-
-        .then(function(response){
-            console.log(response);
-        });
+      symptom.push({ name: nameUser, value: valueUser });
+      console.log(symptom);
     }
+  });
 
-   
+  function getFeatures() {
+    $.ajax({
+      url: queryURL + "GetFeatures",
+      method: "GET",
+    }).then(function (response) {
+      console.log(response);
+    });
+  }
 
-    var sessionID = null; // SessionID
+  function getOutcomes() {
+    $.ajax({
+      url: queryURL + "GetOutcomes",
+      method: "GET",
+    }).then(function (response) {
+      console.log(response);
+    });
+  }
 
-    function InitializeSessionIfNecessary()
-    {
-        if (null != sessionID)
-            return;
+  var sessionID = null; // SessionID
 
-            $.ajax({
-                url: queryURL + "InitSession",
-                method: "GET"
-            })
-            .then(function(response){
-                if (response.status == 'ok'){
-                console.log(response);
-                var sessionID = response.SessionID;
-                console.log(sessionID);
-        
-                termsOfAgreement(sessionID);
-                getOutcomes();
-                getFeatures();
-                }
-            });
-        
-    };
+  function InitializeSessionIfNecessary() {
+    if (null != sessionID) return;
 
-    InitializeSessionIfNecessary();
+    $.ajax({
+      url: queryURL + "InitSession",
+      method: "GET",
+    }).then(function (response) {
+      if (response.status == "ok") {
+        console.log(response);
+        var sessionID = response.SessionID;
+        console.log(sessionID);
 
-    function termsOfAgreement(sessionID) {
+        termsOfAgreement(sessionID);
+        getOutcomes();
+        getFeatures();
+      }
+    });
+  }
 
-        var strPassphrase = "I have read, understood and I accept and agree to comply with the Terms of Use of EndlessMedicalAPI and Endless Medical services. The Terms of Use are available on endlessmedical.com";
+  InitializeSessionIfNecessary();
 
-        
-        $.ajax({
-            url: queryURL + "AcceptTermsOfUse?" + "SessionID=" + sessionID + "&passphrase=" + strPassphrase, 
-            method: "POST"
-        })
-        .then(function(response){
-            console.log(response);
-        })
-    };
+  function termsOfAgreement(sessionID) {
+    var strPassphrase =
+      "I have read, understood and I accept and agree to comply with the Terms of Use of EndlessMedicalAPI and Endless Medical services. The Terms of Use are available on endlessmedical.com";
 
+    $.ajax({
+      url:
+        queryURL +
+        "AcceptTermsOfUse?" +
+        "SessionID=" +
+        sessionID +
+        "&passphrase=" +
+        strPassphrase,
+      method: "POST",
+    }).then(function (response) {
+      console.log(response);
+    });
+  }
 
+  /*
     function updateFeature(){
 
         $.ajax({
-        url: queryURL + "UpdateFeature?" + "SessionID=" + sessionID + "&name=" + symptom.name + "&value=" + symptom.value,
+        url: queryURL + "UpdateFeature?" + "SessionID=" + sessionID + "&name=" + symptom[0].name + "&value=" + symptom[0].value,
         method: "POST"
         })
         .then(function (response) {
@@ -94,7 +104,7 @@ $(document).ready(function(){
         else if (result.data.status == 'error') {
 
         }
-        */
+        
         });
     }
 
@@ -102,9 +112,9 @@ $(document).ready(function(){
 
         updateFeature();
 
-        });
-    
-    /*
+        });*/
+
+  /*
     function getOutcomes () {
         const settings = {
             "async": true,
@@ -241,10 +251,4 @@ $(document).ready(function(){
         })
     };
     */
-
-
-
- });
-
-
-
+});
