@@ -1,7 +1,7 @@
 $(document).ready(function () {
   var queryURL = "http://api.endlessmedical.com/v1/dx/";
 
-  var symptom = [{ name: "Chills", value: "Yes" }];
+  var symptom = [];
 
   var topDiseasesResult = [];
   var variableImportancesResult = [];
@@ -17,14 +17,15 @@ $(document).ready(function () {
       $(event.target).removeClass("is-danger");
       for (var j = 0; j < symptom.length; j++) {
         if (symptom[j].name == nameUser) {
+          deleteFeature();
           symptom.splice(j, 1);
           console.log(symptom);
         }
       }
     } else {
       $(event.target).addClass("is-danger");
-
       symptom.push({ name: nameUser, value: valueUser });
+      updateFeature();
       console.log(symptom);
     }
   });
@@ -86,15 +87,15 @@ function InitializeSessionIfNecessary()
             termsOfAgreement(sessionID);
             getUseDefaultValues ();
             setUseDefaultValues();
-            updateFeature();
-            //deleteFeature();
+            
+            
             getSuggestedTests();
             getSuggestedSpecializations();
             getSuggestedFeatures_PatientProvided();
             getSuggestedFeatures_PhysicianProvided();
             getSuggestedFeatures_Tests();
             analyze();
-            loadSymptoms();
+            //loadSymptoms();
         });
     
 };
@@ -146,7 +147,7 @@ function setUseDefaultValues (){
 function updateFeature(){
 
     $.ajax({
-        url: queryURL + "UpdateFeature?" + "SessionID=" + sessionID + "&name=" + symptom[0].name + "&value=" + symptom[0].value,
+        url: queryURL + "UpdateFeature?" + "SessionID=" + sessionID + "&name=" + symptom.name + "&value=" + symptom.value,
         method: "POST"
     })
     .then(function (response) {
@@ -258,6 +259,7 @@ function analyze () {
         }
     })
 }
+
 
 function loadSymptoms() {
 
