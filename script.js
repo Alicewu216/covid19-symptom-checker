@@ -294,6 +294,12 @@ $(document).ready(function () {
       $("#display-div").append(a);
       var b = $("<progress>");
       b.addClass("progress");
+      if (i<3) {
+        b.addClass("is-warning");
+      }
+      if(diseaseName == "Coronavirus disease 2019 (Covid-19)") {
+        b.addClass("is-danger");
+      }
       b.attr("value", diseasePercentage * 100);
       b.attr("max", "100");
       $("#display-div").append(b);
