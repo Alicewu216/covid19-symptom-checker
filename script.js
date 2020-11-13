@@ -3,9 +3,10 @@ $(document).ready(function () {
 
   var symptom = [];
 
-  
-
-  $(".input");
+  $(".button.save-age.is-info").on("click", function () {
+    var ageUser = $("#user-input").val();
+    symptom.push({ name: "Age", value: ageUser });
+  });
 
   $(".field.is-grouped.is-grouped-multiline").on("click", ".button", function (
     event
@@ -39,8 +40,7 @@ $(document).ready(function () {
     $.ajax({
       url: queryURL + "GetFeatures",
       method: "GET",
-    })
-    .then(function (response) {
+    }).then(function (response) {
       console.log("This is a console log for getFeatures: ");
       console.log(response);
     });
@@ -52,8 +52,7 @@ $(document).ready(function () {
     $.ajax({
       url: queryURL + "GetOutcomes",
       method: "GET",
-    })
-    .then(function (response) {
+    }).then(function (response) {
       console.log("This is a console log for getOutcomes: ");
       console.log(response);
     });
@@ -83,7 +82,6 @@ $(document).ready(function () {
       getUseDefaultValues();
       setUseDefaultValues();
 
-      
       getSuggestedTests();
       getSuggestedSpecializations();
       getSuggestedFeatures_PatientProvided();
@@ -262,10 +260,13 @@ $(document).ready(function () {
       console.log("This is a console log for the analyze function: ");
       console.log(response);
 
+      //console.log(response.Diseases);
+
       if (response.status == "ok") {
         topDiseasesResult = response.Diseases;
         variableImportancesResult = response.VariableImportances;
       }
+      displayResult(topDiseasesResult);
     });
   }
 
@@ -273,5 +274,24 @@ $(document).ready(function () {
     $.getJSON("../Assests/SymptomsOutput.json", function (json) {
       console.log(json);
     });
+  }
+
+  function displayResult(topDiseasesResult) {
+    console.log(topDiseasesResult);
+    console.log(topDiseasesResult[0]);
+    console.log(Object.keys(topDiseasesResult[0]));
+    console.log(Object.values(topDiseasesResult[0]));
+    for (i = 0; i < topDiseasesResult.length; i++) {
+      var diseaseName = Object.keys(topDiseasesResult[i]);
+      var diseasePercentage = Object.values(topDiseasesResult[i]);
+      var a = $("<p>");
+      a.text(diseaseName);
+      $("#display-div").append(a);
+      var b = $("<progress>");
+      b.addClass("progress");
+      b.attr("value", diseasePercentage * 100);
+      b.attr("max", "100");
+      $("#display-div").append(b);
+    }
   }
 });
