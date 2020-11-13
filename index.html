@@ -16,11 +16,19 @@
   <section class="hero is-medium has-bg-img">
     <div class="hero-body">
       <div class="container">
-        <h1 class="title">
+        <div class="title">
           COVID-19 Symptom Checker
-        </h1>
+        </div>
         <h2 class="subtitle">
-          Add your symptoms and see analysis of your chance for getting COVID-19.
+          Follow steps below to check your probablity of having COVID-19: <br />
+          - enter your age and click save<br />
+          - check each symptom you have developed<br />
+          - wait for your diagnosis of possible diseases including COVID-19. <br />
+          <br />
+          Note: <br />
+          * Top three possible diseases show up in yellow <br />
+          * possibility for COVID-19 shows up in red.<br />
+          * Don't forget to keep current local cases data provided in mind.
         </h2>
       </div>
     </div>
@@ -34,21 +42,17 @@
         <div class="field">
           <div class="field is-horizontal">
             <div class="field-label is-normal">
-              <label class="label">Age:</label>
+              <label class="label is-size-5">Age:</label>
             </div>
-            <div class="field-body">
-              <div class="field">
-                <p class="control">
-                  <input class="input" id="user-input" type="age" placeholder="Enter your age here">
-                </p>
+            <div class="field has-addons">
+              <div class="control">
+                <input class="input" id="user-input" type="age" placeholder="Enter your age here">
               </div>
-            </div>
-            <div class="field-body">
-              <p class="control">
+              <div class="control">
                 <a class="button save-age is-info">
                   Save
                 </a>
-              </p>
+              </div>
             </div>
           </div>
           <div class="field is-grouped is-grouped-multiline">

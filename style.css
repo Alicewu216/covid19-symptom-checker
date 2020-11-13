@@ -7,10 +7,14 @@
   background-color: #999;
 }
 
+
+
 .title {
   color: white;
+  font-size: 85px;
+  margin-bottom: 25px;
 }
 .subtitle {
   color: white;
+  margin-top: 25px;
 }
-
