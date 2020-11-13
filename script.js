@@ -277,6 +277,7 @@ $(document).ready(function () {
   }
 
   function displayResult(topDiseasesResult) {
+    $("#display-div").empty();
     console.log(topDiseasesResult);
     console.log(topDiseasesResult[0]);
     console.log(Object.keys(topDiseasesResult[0]));
