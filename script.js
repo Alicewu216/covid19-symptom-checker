@@ -3,12 +3,10 @@ $(document).ready(function () {
 
   var symptom = [];
 
-  var topDiseasesResult = [];
-  var variableImportancesResult = [];
-
-
-  $(".input")
-  
+  $(".button.save-age.is-info").on("click", function () {
+    var ageUser = $("#user-input").val();
+    symptom.push({ name: "Age", value: ageUser });
+  });
 
   $(".field.is-grouped.is-grouped-multiline").on("click", ".button", function (
     event
@@ -32,253 +30,281 @@ $(document).ready(function () {
     }
   });
 
-    $(".button.submit-btn.is-info").on("click", function() {
-        console.log("analyze clicked");
-        updateFeature();
-        //JSON.stringify(symptom);
-        console.log("This is the current array values: " + JSON.stringify(symptom));
-        analyze();
-
-        if (symptom.length != 0) {
-            for(var i=0; i<symptom.length; i++){
-                var deleteSymptom = symptom[i].name;
-                deleteFeature(deleteSymptom);
-            }  
-            symptom.length = 0;
-            console.log("This array should be empty: " + JSON.stringify(symptom));
-        }
-    });
+  $(".button.submit-btn.is-info").on("click", function () {
+    console.log("analyze clicked");
+    updateFeature();
+    analyze();
+  });
 
   function getFeatures() {
     $.ajax({
-        url: queryURL + "GetFeatures",
-        method: "GET"
-    })
-
-    .then(function(response){
-        console.log("This is a console log for getFeatures: ")
-        console.log(response);
+      url: queryURL + "GetFeatures",
+      method: "GET",
+    }).then(function (response) {
+      console.log("This is a console log for getFeatures: ");
+      console.log(response);
     });
-};
+  }
 
-getFeatures();
+  getFeatures();
 
-function getOutcomes () {
+  function getOutcomes() {
     $.ajax({
-        url: queryURL + "GetOutcomes",
-        method: "GET"
-    })
-
-    .then(function(response){
-        console.log("This is a console log for getOutcomes: ")
-        console.log(response);
+      url: queryURL + "GetOutcomes",
+      method: "GET",
+    }).then(function (response) {
+      console.log("This is a console log for getOutcomes: ");
+      console.log(response);
     });
-}
+  }
 
-getOutcomes();
+  getOutcomes();
 
+  var sessionID = null; // SessionID
+  //var useDefaultValues = null;
 
+  function InitializeSessionIfNecessary() {
+    if (null != sessionID) return;
 
-var sessionID = null; // SessionID
-//var useDefaultValues = null;
-
-function InitializeSessionIfNecessary()
-{
-    if (null != sessionID)
-        return;
-
-        $.ajax({
-            url: queryURL + "InitSession",
-            method: "GET"
-        })
-        .then(function(response){
-            if (response.status == 'ok'){
-
-            // Response for InitSession is console logged here.
-            console.log(response);
-            //Session ID is stored here.
-            sessionID = response.SessionID;
-            //Session ID is console logged here.
-            console.log("This is the session ID: " + sessionID);
-            
-
-            }
-            termsOfAgreement(sessionID);
-            getUseDefaultValues ();
-            setUseDefaultValues();
-            
-            //deleteFeature();
-            getSuggestedTests();
-            getSuggestedSpecializations();
-            getSuggestedFeatures_PatientProvided();
-            getSuggestedFeatures_PhysicianProvided();
-            getSuggestedFeatures_Tests();
-            
-            //loadSymptoms();
-        });
-    
-};
-
-InitializeSessionIfNecessary();
-
-function termsOfAgreement(sessionID) {
-
-    var strPassphrase = "I have read, understood and I accept and agree to comply with the Terms of Use of EndlessMedicalAPI and Endless Medical services. The Terms of Use are available on endlessmedical.com";
-
-    
     $.ajax({
-        url: queryURL + "AcceptTermsOfUse?" + "SessionID=" + sessionID + "&passphrase=" + strPassphrase, 
-        method: "POST"
-    })
-    .then(function(response){
-        console.log("This is a console log for termsOfAgreement: ")
+      url: queryURL + "InitSession",
+      method: "GET",
+    }).then(function (response) {
+      if (response.status == "ok") {
+        // Response for InitSession is console logged here.
         console.log(response);
-    })
-};
+        //Session ID is stored here.
+        sessionID = response.SessionID;
+        //Session ID is console logged here.
+        console.log("This is the session ID: " + sessionID);
+      }
+      termsOfAgreement(sessionID);
+      getUseDefaultValues();
+      setUseDefaultValues();
 
-function getUseDefaultValues () {
+      getSuggestedTests();
+      getSuggestedSpecializations();
+      getSuggestedFeatures_PatientProvided();
+      getSuggestedFeatures_PhysicianProvided();
+      getSuggestedFeatures_Tests();
+
+      //loadSymptoms();
+    });
+  }
+
+  InitializeSessionIfNecessary();
+
+  function termsOfAgreement(sessionID) {
+    var strPassphrase =
+      "I have read, understood and I accept and agree to comply with the Terms of Use of EndlessMedicalAPI and Endless Medical services. The Terms of Use are available on endlessmedical.com";
+
+    $.ajax({
+      url:
+        queryURL +
+        "AcceptTermsOfUse?" +
+        "SessionID=" +
+        sessionID +
+        "&passphrase=" +
+        strPassphrase,
+      method: "POST",
+    }).then(function (response) {
+      console.log("This is a console log for termsOfAgreement: ");
+      console.log(response);
+    });
+  }
+
+  function getUseDefaultValues() {
     //AJAX call for the default values
     $.ajax({
-         url: queryURL + "GetUseDefaultValues?SessionID=" + sessionID,
-         method: "GET"
-    })
-    .then(function(response){
-        if (response.status == 'ok')
-            console.log("AJAX resonse for getUseDefaultValues: " );
-            console.log(response);             
-    })
+      url: queryURL + "GetUseDefaultValues?SessionID=" + sessionID,
+      method: "GET",
+    }).then(function (response) {
+      if (response.status == "ok")
+        console.log("AJAX resonse for getUseDefaultValues: ");
+      console.log(response);
+    });
+  }
 
-    
-}
-
-function setUseDefaultValues (){
-
+  function setUseDefaultValues() {
     $.ajax({
-        url: queryURL + "SetUseDefaultValues?SessionID=" + sessionID + "&value=true",
-        method: "POST"
-    })
-    .then(function(response){
-        console.log("This is a console log for setUseDefaultValues: ");
-        console.log(response);
-    })
-}
+      url:
+        queryURL + "SetUseDefaultValues?SessionID=" + sessionID + "&value=true",
+      method: "POST",
+    }).then(function (response) {
+      console.log("This is a console log for setUseDefaultValues: ");
+      console.log(response);
+    });
+  }
 
-function updateFeature(){
+  function updateFeature() {
     for (var k = 0; k < symptom.length; k++) {
-        $.ajax({
-            url: queryURL + "UpdateFeature?" + "SessionID=" + sessionID + "&name=" + symptom[k].name + "&value=" + symptom[k].value,
-            method: "POST"
-        })
-        .then(function (response) {
-            console.log("This is a console log for updateFeature: ");
-            console.log(response);
-            /*
-            if (result.data.status == 'ok') {
-            setTimeout( DisplaySuggestedTests(), 1000 ); // 10.08.2019
-            }
-            else if (result.data.status == 'error') {
-
-            }
-            */
-        });
+      $.ajax({
+        url:
+          queryURL +
+          "UpdateFeature?" +
+          "SessionID=" +
+          sessionID +
+          "&name=" +
+          symptom[k].name +
+          "&value=" +
+          symptom[k].value,
+        method: "POST",
+      }).then(function (response) {
+        console.log("This is a console log for updateFeature: ");
+        console.log(response);
+      });
     }
-}
+  }
 
-function deleteFeature (deleteSymptom){
-
+  function deleteFeature() {
     $.ajax({
-        url: queryURL + "DeleteFeature?" + "SessionID=" + sessionID + "&name=" + deleteSymptom,
-        method: "POST"
-    })
-    .then(function(response) {
-        if (response.status == 'ok'){
+      url:
+        queryURL +
+        "DeleteFeature?" +
+        "SessionID=" +
+        sessionID +
+        "&name=" +
+        symptom[0].name,
+      method: "POST",
+    }).then(function (response) {
+      if (response.status == "ok") {
         console.log("This is a console log for deleteFeature: ");
         console.log(response);
-        }
-        else if (response.status){
-            console.log("deleteFeature Error")
-        }
-    })
+      } else if (response.status) {
+        console.log("deleteFeature Error");
+      }
+    });
+  }
 
-}
-
-
-function getSuggestedTests () {
-
+  function getSuggestedTests() {
     $.ajax({
-        url: queryURL + "GetSuggestedTests?SessionID=" + sessionID + "&TopDiseasesToTake=10",
-        method: "GET"
-    })
-    .then(function(response){
-        console.log("This is a console log for getSuggestedTests: ");
-        console.log(response);
-    })
-}
+      url:
+        queryURL +
+        "GetSuggestedTests?SessionID=" +
+        sessionID +
+        "&TopDiseasesToTake=10",
+      method: "GET",
+    }).then(function (response) {
+      console.log("This is a console log for getSuggestedTests: ");
+      console.log(response);
+    });
+  }
 
-function getSuggestedSpecializations () {
-
+  function getSuggestedSpecializations() {
     $.ajax({
-        url: queryURL + "GetSuggestedSpecializations?SessionID=" + sessionID + "&NumberOfResults=10",
-        method: "GET"
-    })
-    .then(function(response){
-        console.log("This is a console log for getSuggestedSpecializations: ");
-        console.log(response);
-    })
-}
+      url:
+        queryURL +
+        "GetSuggestedSpecializations?SessionID=" +
+        sessionID +
+        "&NumberOfResults=10",
+      method: "GET",
+    }).then(function (response) {
+      console.log("This is a console log for getSuggestedSpecializations: ");
+      console.log(response);
+    });
+  }
 
-function getSuggestedFeatures_PatientProvided () {
-
+  function getSuggestedFeatures_PatientProvided() {
     $.ajax({
-        url: queryURL + "GetSuggestedFeatures_PatientProvided?SessionID=" + sessionID + "&TopDiseasesToTake=10",
-        method: "GET"
-    })
-    .then(function(response){
-        console.log("This is a console log for getSuggestedFeatures_PatientProvided: ");
-        console.log(response);
-    })
-}
+      url:
+        queryURL +
+        "GetSuggestedFeatures_PatientProvided?SessionID=" +
+        sessionID +
+        "&TopDiseasesToTake=10",
+      method: "GET",
+    }).then(function (response) {
+      console.log(
+        "This is a console log for getSuggestedFeatures_PatientProvided: "
+      );
+      console.log(response);
+    });
+  }
 
-function getSuggestedFeatures_PhysicianProvided () {
-
+  function getSuggestedFeatures_PhysicianProvided() {
     $.ajax({
-        url: queryURL + "GetSuggestedFeatures_PhysicianProvided?SessionID=" + sessionID + "&TopDiseasesToTake=10",
-        method: "GET"
-    })
-    .then(function(response){
-        console.log("This is a console log for getSuggestedFeatures_PhysicianProvided: ");
-        console.log(response);
-    })
-}
+      url:
+        queryURL +
+        "GetSuggestedFeatures_PhysicianProvided?SessionID=" +
+        sessionID +
+        "&TopDiseasesToTake=10",
+      method: "GET",
+    }).then(function (response) {
+      console.log(
+        "This is a console log for getSuggestedFeatures_PhysicianProvided: "
+      );
+      console.log(response);
+    });
+  }
 
-function getSuggestedFeatures_Tests () {
-
+  function getSuggestedFeatures_Tests() {
     $.ajax({
-        url: queryURL + "GetSuggestedFeatures_Tests?SessionID=" + sessionID + "&TopDiseasesToTake=10",
-        method:"GET"
-    })
-    .then(function(response){
-        console.log("This is a console log for getSuggestedFeatures_Tests: ");
-        console.log(response);
-    })
-}
+      url:
+        queryURL +
+        "GetSuggestedFeatures_Tests?SessionID=" +
+        sessionID +
+        "&TopDiseasesToTake=10",
+      method: "GET",
+    }).then(function (response) {
+      console.log("This is a console log for getSuggestedFeatures_Tests: ");
+      console.log(response);
+    });
+  }
 
-function analyze () {
-
+  function analyze() {
+    var topDiseasesResult = [];
+    var variableImportancesResult = [];
     $.ajax({
-        url: queryURL + "Analyze?SessionID=" + sessionID + "&NumberOfResults=10",
-        method: "GET"
-    })
-    .then(function(response){
-        console.log("This is a console log for the analyze function: ");
-        console.log(response);
+      url: queryURL + "Analyze?SessionID=" + sessionID + "&NumberOfResults=10",
+      method: "GET",
+    }).then(function (response) {
+      console.log("This is a console log for the analyze function: ");
+      console.log(response);
 
-        if (response.status == 'ok') {
-            topDiseasesResult = response.Diseases;
-            variableImportancesResult = response.VariableImportances;
-        }
-    })
-}
+      //console.log(response.Diseases);
+
+      if (response.status == "ok") {
+        topDiseasesResult = response.Diseases;
+        variableImportancesResult = response.VariableImportances;
+      }
+      displayResult(topDiseasesResult);
+    });
+  }
+
+  function loadSymptoms() {
+    $.getJSON("../Assests/SymptomsOutput.json", function (json) {
+      console.log(json);
+    });
+  }
+
+  function displayResult(topDiseasesResult) {
+    console.log(topDiseasesResult);
+    console.log(topDiseasesResult[0]);
+    console.log(Object.keys(topDiseasesResult[0]));
+    console.log(Object.values(topDiseasesResult[0]));
+    for (i = 0; i < topDiseasesResult.length; i++) {
+      var diseaseName = Object.keys(topDiseasesResult[i]);
+      var diseasePercentage = Object.values(topDiseasesResult[i]);
+      var a = $("<p>");
+      a.text(
+        diseaseName +
+          " " +
+          Math.round(100 * (diseasePercentage * 100)) / 100 +
+          "%"
+      );
+      $("#display-div").append(a);
+      var b = $("<progress>");
+      b.addClass("progress");
+      if (i<3) {
+        b.addClass("is-warning");
+      }
+      if(diseaseName == "Coronavirus disease 2019 (Covid-19)") {
+        b.addClass("is-danger");
+      }
+      b.attr("value", diseasePercentage * 100);
+      b.attr("max", "100");
+      $("#display-div").append(b);
+    }
+  }
 
 /////////////////////////////////////////////
 // Corona Virus Tracker API
@@ -335,6 +361,3 @@ function getRegionStats (userState, userCity) {
 }
 
 });
-
-
-
