@@ -6,7 +6,9 @@ $(document).ready(function () {
   var topDiseasesResult = [];
   var variableImportancesResult = [];
 
+
   $(".input")
+  
 
   $(".field.is-grouped.is-grouped-multiline").on("click", ".button", function (
     event
@@ -25,10 +27,27 @@ $(document).ready(function () {
     } else {
       $(event.target).addClass("is-danger");
       symptom.push({ name: nameUser, value: valueUser });
-      updateFeature();
-      console.log(symptom);
+      //updateFeature();
+    //   console.log(symptom);
     }
   });
+
+    $(".button.submit-btn.is-info").on("click", function() {
+        console.log("analyze clicked");
+        updateFeature();
+        //JSON.stringify(symptom);
+        console.log("This is the current array values: " + JSON.stringify(symptom));
+        analyze();
+
+        if (symptom.length != 0) {
+            for(var i=0; i<symptom.length; i++){
+                var deleteSymptom = symptom[i].name;
+                deleteFeature(deleteSymptom);
+            }  
+            symptom.length = 0;
+            console.log("This array should be empty: " + JSON.stringify(symptom));
+        }
+    });
 
   function getFeatures() {
     $.ajax({
@@ -88,13 +107,13 @@ function InitializeSessionIfNecessary()
             getUseDefaultValues ();
             setUseDefaultValues();
             
-            
+            //deleteFeature();
             getSuggestedTests();
             getSuggestedSpecializations();
             getSuggestedFeatures_PatientProvided();
             getSuggestedFeatures_PhysicianProvided();
             getSuggestedFeatures_Tests();
-            analyze();
+            
             //loadSymptoms();
         });
     
@@ -145,29 +164,30 @@ function setUseDefaultValues (){
 }
 
 function updateFeature(){
+    for (var k = 0; k < symptom.length; k++) {
+        $.ajax({
+            url: queryURL + "UpdateFeature?" + "SessionID=" + sessionID + "&name=" + symptom[k].name + "&value=" + symptom[k].value,
+            method: "POST"
+        })
+        .then(function (response) {
+            console.log("This is a console log for updateFeature: ");
+            console.log(response);
+            /*
+            if (result.data.status == 'ok') {
+            setTimeout( DisplaySuggestedTests(), 1000 ); // 10.08.2019
+            }
+            else if (result.data.status == 'error') {
 
-    $.ajax({
-        url: queryURL + "UpdateFeature?" + "SessionID=" + sessionID + "&name=" + symptom.name + "&value=" + symptom.value,
-        method: "POST"
-    })
-    .then(function (response) {
-        console.log("This is a console log for updateFeature: ");
-        console.log(response);
-        /*
-        if (result.data.status == 'ok') {
-        setTimeout( DisplaySuggestedTests(), 1000 ); // 10.08.2019
-        }
-        else if (result.data.status == 'error') {
-
-        }
-        */
-    });
+            }
+            */
+        });
+    }
 }
 
-function deleteFeature (){
+function deleteFeature (deleteSymptom){
 
     $.ajax({
-        url: queryURL + "DeleteFeature?" + "SessionID=" + sessionID + "&name=" + symptom[0].name,
+        url: queryURL + "DeleteFeature?" + "SessionID=" + sessionID + "&name=" + deleteSymptom,
         method: "POST"
     })
     .then(function(response) {
@@ -246,7 +266,7 @@ function getSuggestedFeatures_Tests () {
 function analyze () {
 
     $.ajax({
-        url: queryURL + "Analyze?SessionID=" + sessionID + "NumberOfResults=10",
+        url: queryURL + "Analyze?SessionID=" + sessionID + "&NumberOfResults=10",
         method: "GET"
     })
     .then(function(response){
@@ -260,14 +280,59 @@ function analyze () {
     })
 }
 
+/////////////////////////////////////////////
+// Corona Virus Tracker API
+// var country = userCountry;
+// var state = userState;
+// var city = userCity;
 
-function loadSymptoms() {
 
-    $.getJSON( "../Assests/SymptomsOutput.json", function( json ) {
-        console.log( json );
-       });
+var keyAPI = "c7562f9c67ea28ae57a80982afbcae18d7659581b6459db880076318";
+var cityArr = [];
+
+function getIP () {
+    $.ajax({
+        url: "https://api.ipdata.co?api-key=" + keyAPI,
+        method: "GET"
+    })
+    .then(function(response){
+        console.log(response);
+
+        var userCountry = response.country_code;
+        var userState = response.region;
+        var userCity = response.city;
+
+        console.log(userCountry);
+        console.log(userState);
+        console.log(userCity);
+         
+        getRegionStats(userState);
+
+        
+    })
 }
 
+getIP ();
+
+function getRegionStats (userState, userCity) {
+
+    $.ajax({
+        url: "https://api.quarantine.country/api/v1/summary/region?region=" + userState + "&sub_areas=1",
+        method: "GET"
+    })
+    .then(function(response){
+        //console.log(response);
+
+        cityArr = Object.keys(response.data.regions);
+        //console.log(cityArr);
+
+        for(var h = 0; h < cityArr.length; h++ ){
+            if (userCity == cityArr[h]) {
+                console.log(cityArr[h]);
+            }
+        }
+    })
+}
 
 });
 
