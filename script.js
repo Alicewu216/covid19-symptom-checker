@@ -24,9 +24,9 @@ $(document).ready(function () {
       }
     } else {
       $(event.target).addClass("is-danger");
-
       symptom.push({ name: nameUser, value: valueUser });
-      console.log(symptom);
+      //updateFeature();
+    //   console.log(symptom);
     }
   });
 
@@ -267,6 +267,7 @@ $(document).ready(function () {
         variableImportancesResult = response.VariableImportances;
       }
       displayResult(topDiseasesResult);
+      $(".columns.hide").removeClass("hide");
     });
   }
 
@@ -306,4 +307,88 @@ $(document).ready(function () {
       $("#display-div").append(b);
     }
   }
+
+/////////////////////////////////////////////
+// Corona Virus Tracker API
+// var country = userCountry;
+// var state = userState;
+// var city = userCity;
+
+
+var keyAPI = "c7562f9c67ea28ae57a80982afbcae18d7659581b6459db880076318";
+var cityArr = [];
+
+function getIP () {
+    $.ajax({
+        url: "https://api.ipdata.co?api-key=" + keyAPI,
+        method: "GET"
+    })
+    .then(function(response){
+        console.log(response);
+
+        var userCountry = response.country_code;
+        var userState = response.region;
+        var userCity = response.city;
+
+        console.log(userCountry);
+        console.log(userState);
+        console.log(userCity);
+         
+        getRegionStats(userState, userCity);
+
+        
+    })
+}
+
+getIP ();
+
+function getRegionStats (userState, userCity) {
+ console.log(userCity);
+    $.ajax({
+        url: "https://api.quarantine.country/api/v1/summary/region?region=" + userState + "&sub_areas=1",
+        method: "GET"
+    })
+    .then(function(response){
+        console.log(response);
+
+        cityArr = response.data.regions;
+        console.log(cityArr);
+        var tempValue = Object.values(cityArr);
+        for (i = 0; i < tempValue.length; i++) {
+          
+          // console.log(tempValue[i].name);
+          // console.log(userCity);
+          if (tempValue[i].name == userCity) {
+            console.log("this is the place");
+            $("#city-name").text("Current Location: " + tempValue[i].name);
+            $("#total-cases").text("Total Cases: " + tempValue[i].total_cases);
+            $("#total-death").text("Total Death: " + tempValue[i].deaths);
+            $("#tested-data").text("Total Tested: " + tempValue[i].tested);
+          }
+        }
+        // console.log(tempValue[0].name);
+        // console.log(tempValue[0].total_cases);
+        //  console.log(tempObj);
+        //  for (i=0; i< tempObj.length; i++) {
+        //    var tempCity = 
+        //    var cityName = cityArr.tempCity;
+        //    console.log(cityName);
+        //  }
+         //var updateArr = [];
+        //  for (i = 0; i< tempObj.length; i++) {
+        //    var tempVal = tempObj[i];
+        //    tempVal = tempVal.replace("_"," ");
+        //    updateArr.push(tempVal);
+        //  }
+         //console.log(updateArr);
+
+
+        for(var h = 0; h < cityArr.length; h++ ){
+            if (userCity == cityArr[h]) {
+                console.log(cityArr[h]);
+            }
+        }
+    })
+}
+
 });
