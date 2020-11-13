@@ -14,11 +14,25 @@
   font-size: 85px;
   margin-bottom: 25px;
 }
-.subtitle {
+.subtitle.info-direction {
   color: white;
   margin-top: 25px;
 }
 
 .columns.hide{
   display: none;
+}
+
+.title.display {
+  font-size: 25px;
+}
+
+#tested-number-prompt {
+  color: green;
+}
+#total-cases-prompt {
+  color: rgb(221, 123, 11);
+}
+#total-death-prompt {
+  color: rgb(209, 9, 9);
 }

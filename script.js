@@ -360,10 +360,14 @@ function getRegionStats (userState, userCity) {
           // console.log(userCity);
           if (tempValue[i].name == userCity) {
             console.log("this is the place");
-            $("#city-name").text("Current Location: " + tempValue[i].name);
-            $("#total-cases").text("Total Cases: " + tempValue[i].total_cases);
-            $("#total-death").text("Total Death: " + tempValue[i].deaths);
-            $("#tested-data").text("Total Tested: " + tempValue[i].tested);
+            $("#city-name-prompt").text("Current Location: ");
+            $("#city-name-data").text(tempValue[i].name);
+            $("#total-cases-prompt").text("Total Positive Cases: ");
+            $("#total-cases-data").text(tempValue[i].total_cases);
+            $("#total-death-prompt").text("Total Death Number: ");
+            $("#total-death-data").text(tempValue[i].deaths);
+            $("#tested-number-prompt").text("Total Tested Number: ");
+            $("#tested-number-data").text(tempValue[i].tested);
           }
         }
         // console.log(tempValue[0].name);
