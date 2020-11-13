@@ -285,7 +285,12 @@ $(document).ready(function () {
       var diseaseName = Object.keys(topDiseasesResult[i]);
       var diseasePercentage = Object.values(topDiseasesResult[i]);
       var a = $("<p>");
-      a.text(diseaseName);
+      a.text(
+        diseaseName +
+          " " +
+          Math.round(100 * (diseasePercentage * 100)) / 100 +
+          "%"
+      );
       $("#display-div").append(a);
       var b = $("<progress>");
       b.addClass("progress");
