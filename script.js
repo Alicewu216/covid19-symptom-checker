@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  var queryURL = "http://api.endlessmedical.com/v1/dx/";
+  var queryURL = "https://api.endlessmedical.com/v1/dx/";
 
   var symptom = [];
 
