@@ -1,0 +1,40 @@
+/*set bakground image for hero class from bulma*/
+.has-bg-img {
+  background: url("../Assests/covid1.jpg") center center;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  background-color: #999;
+}
+/*make biggest title white and resize*/
+.title.head {
+  color: white;
+  font-size: 85px;
+  margin-bottom: 25px;
+}
+/*make subtitle white*/
+.subtitle.info-direction {
+  color: white;
+  margin-top: 25px;
+}
+/*hide bottom div containing cards first*/
+.columns.hide{
+  display: none;
+}
+/*set size for title in current location COVID-19 info cards*/
+.title.display {
+  font-size: 25px;
+}
+/*make tested number card title green*/
+#tested-number-prompt {
+  color: green;
+}
+/*make positive cases card title yellow*/
+#total-cases-prompt {
+  color: rgb(221, 123, 11);
+}
+/*make total death card title red*/
+#total-death-prompt {
+  color: rgb(209, 9, 9);
+}
