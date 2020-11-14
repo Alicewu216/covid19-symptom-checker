@@ -1,6 +1,6 @@
 # project1
-repository link: https://github.com/Alicewu216/project1
-deployed appliction link: https://alicewu216.github.io/project1/
+repository link: https://github.com/Alicewu216/covid19-symptom-checker
+deployed appliction link: https://alicewu216.github.io/covid19-symptom-checker/
 
 This website is a COVID-19 Symptom Checker. Three APIs are utilized as databases. User can enter informations including age and developed symptoms for analysis. The first EndlessMEdical API will take in user inputs and provide a diagnosis of the top ten potential diseases. The website will also automtically find user's IP address, country, state, city information using the second Ipdata API, which is then passed onto the third Qoronavirus API to provide local COVID-19 statistics including current location, total tested number, total positive number, and total death count.
 
