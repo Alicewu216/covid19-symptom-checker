@@ -1,6 +1,6 @@
 /*set bakground image for hero class from bulma*/
 .has-bg-img {
-  background: url("../Assests/covid1.jpg") center center;
+  background: url("./Assests/covid1.jpg") center center;
   background-position: center center;
   background-repeat: no-repeat;
   background-attachment: fixed;
